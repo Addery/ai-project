@@ -1,0 +1,9 @@
+# prometheus.yml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'gateway'
+    static_configs:
+      - targets: ['host.docker.internal:8080']  # Windows/Mac 用 host.docker.internal
+        # Linux 用: ['172.17.0.1:8080'] 或本机 IP

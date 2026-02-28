@@ -1,0 +1,47 @@
+# config/config.yaml
+server:
+  port: 8080
+
+auth:
+  strategy: "apikey"
+  # 当 strategy == "apikey" 时使用：
+  api_keys:
+    - "my-secret-key-123"
+    - "dev-key-456"
+  # 当 strategy == "jwt" 时使用：
+  jwt:
+    secret: "replace-with-secure-secret"
+
+rate_limit:
+  requests_per_second: 10
+
+upstreams:
+  - path_prefix: "/echo"
+    # strategy 可省略（默认 round_robin）
+    backends:
+      - url: "http://httpbin.org"
+        # weight 可省略（默认 1）
+      - url: "https://httpbin.org"
+
+  - path_prefix: "/api"
+    strategy: "weighted_round_robin"
+    backends:
+      - url: "http://localhost:9000"
+        weight: 3
+      - url: "http://localhost:9001"
+        # weight 默认为 1
+    rate_limit:
+      strategy: "local"
+      rps: 20
+      key_parts: [ "ip" ]
+
+  - path_prefix: "/lc"
+    strategy: "least_connections"
+    backends:
+      - url: "http://localhost:9000"
+      - url: "http://localhost:9001"
+    rate_limit:
+      strategy: "redis"
+      rps: 5
+      window: "1s"
+      key_parts: [ "api_key" ]
