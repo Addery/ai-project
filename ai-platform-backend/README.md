@@ -1,3 +1,4 @@
+```text
 ai-platform-backend
 ├── pom.xml                          # 父工程依赖管理
 ├── src
@@ -41,10 +42,4 @@ ai-platform-backend
 │   └── test                            # 单元测试
 │       └── java
 │           └── com
-│               └── example
-│                   └── aiplatform
-│                       ├── service
-│                       │   ├── QuotaServiceTest.java   # 并发扣减测试
-│                       │   └── OrderServiceTest.java   # 状态机流转测试
-│                       └── AiPlatformApplicationTests.java
-└── README.md                           # 项目文档 (含 API 定义, 部署说明)
+│
