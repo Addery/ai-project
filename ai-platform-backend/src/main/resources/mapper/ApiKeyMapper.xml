@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 关键：namespace 必须对应 Java 接口的包名 + 类名 -->
+<mapper namespace="com.addery.apiplatformbackend.mapper.ApiKeyMapper">
+
+    <!-- 结果映射 (ResultMap) -->
+    <!-- 如果数据库字段是下划线 (user_id)，实体类是驼峰 (userId)，且开启了 map-underscore-to-camel-case，则此部分可省略 -->
+    <resultMap id="BaseResultMap" type="com.addery.apiplatformbackend.entity.ApiKey">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="api_key" property="apiKey"/>
+        <result column="api_secret" property="apiSecret"/>
+        <result column="status" property="status"/>
+        <result column="expires_at" property="expiresAt"/>
+        <result column="ip_whitelist" property="ipWhitelist"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用列片段 (便于复用) -->
+    <sql id="Base_Column_List">
+        id
+        , user_id, tenant_id, api_key, api_secret, status, expires_at, ip_whitelist, create_time, update_time
+    </sql>
+
+    <!--
+      示例：自定义查询 (可选)
+      如果未来需要更复杂的查询，可以取消注释并使用
+    -->
+    <!--
+    <select id="selectValidKey" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM api_key
+        WHERE api_key = #{key}
+          AND status = 1
+          AND (expires_at IS NULL OR expires_at > NOW())
+    </select>
+    -->
+
+</mapper>

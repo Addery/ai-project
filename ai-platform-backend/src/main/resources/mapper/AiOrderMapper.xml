@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.addery.apiplatformbackend.mapper.AiOrderMapper">
+
+    <!-- 状态机核心：CAS (Compare And Set) 风格更新 -->
+    <update id="updateStatusAtomic">
+        UPDATE ai_order
+        SET status      = #{newStatus},
+            update_time = NOW()
+        WHERE id = #{id}
+          AND status = #{expectedStatus}
+    </update>
+
+    <select id="selectByOrderNo" resultType="com.addery.apiplatformbackend.entity.AiOrder">
+        SELECT *
+        FROM ai_order
+        WHERE order_no = #{orderNo} LIMIT 1
+    </select>
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.addery.apiplatformbackend.mapper.UserQuotaMapper">
+
+    <update id="deductQuotaAtomic">
+        UPDATE user_quota
+        SET used_quota  = used_quota + #{amount},
+            version     = version + 1,
+            update_time = NOW()
+        WHERE user_id = #{userId}
+          AND version = #{version}
+          AND (total_quota - used_quota) >= #{amount}
+    </update>
+</mapper>

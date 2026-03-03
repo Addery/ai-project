@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.addery.apiplatformbackend.mapper.ApiAuditLogMapper">
+    <insert id="insertBatch">
+        INSERT INTO api_audit_log
+        (trace_id, user_id, tenant_id, api_path, status_code, consume_quota, request_tokens, response_tokens, cost_ms,
+        error_msg, create_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.traceId}, #{item.userId}, #{item.tenantId}, #{item.apiPath}, #{item.statusCode},
+            #{item.consumeQuota}, #{item.requestTokens}, #{item.responseTokens}, #{item.costMs},
+            #{item.errorMsg}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <select id="selectAggStats" resultType="com.addery.apiplatformbackend.dto.StatsDTO">
+        SELECT
+        COUNT(*) as totalCalls,  <!-- 注意：别名要与 DTO 字段名一致 (驼峰) -->
+        SUM(CASE WHEN status_code = 200 THEN 1 ELSE 0 END) as successCalls,
+        SUM(CASE WHEN status_code != 200 THEN 1 ELSE 0 END) as failedCalls,
+        SUM(consume_quota) as totalTokens,
+        SUM(request_tokens) as requestTokens,
+        SUM(response_tokens) as responseTokens,
+        AVG(cost_ms) as avgLatency
+        FROM api_audit_log
+        WHERE user_id = #{userId}
+        AND create_time BETWEEN #{startTime} AND #{endTime}
+    </select>
+</mapper>
